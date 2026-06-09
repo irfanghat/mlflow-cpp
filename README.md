@@ -87,39 +87,6 @@ int main() {
 }
 ```
 
-## Building and Integrating
-
-### Prerequisites
-
-* Clang 18+ or GCC 13+
-* CMake 3.22+
-* libcurl development files
-* nlohmann_json headers
-
-### Compilation
-
-```bash
-cmake -DCMAKE_CXX_COMPILER=clang++ -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release
-```
-
-## Roadmap
-
-### OSS MLflow REST Implementation
-
-* [ ] Core `ExperimentService` Implementation (Create, Get, Delete, Search)
-* [ ] Core `RunService` Implementation (Create, Update, LogMetric, LogParam, LogBatch)
-* [ ] Base `ArtifactService` Implementation (REST-backed listing and metadata)
-
-### Databricks MLflow Support
-
-* [ ] Databricks Workspace Host header parsing and URI normalization
-* [ ] Personal Access Token (PAT) authentication injection mechanics
-* [ ] Databricks-specific error body translation (Handling global tracking server variations)
-* [ ] Support for Databricks Unity Catalog managed models via Model Registry endpoints
-
----
-
 ## License
 
 This project is licensed under the Apache 2.0 License.
