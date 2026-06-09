@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  mlflow_server:
+    image: ghcr.io/mlflow/mlflow:v2.13.0
+    container_name: mlflow_local_tracker
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow_data/backend:/mlflow/backend
+      - ./mlflow_data/artifacts:/mlflow/artifacts
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////mlflow/backend/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+      --host 0.0.0.0
+      --port 5000
+    restart: unless-stopped
