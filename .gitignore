@@ -69,3 +69,6 @@ Testing/
 
 # mlflow
 mlflow_data/
+
+# VScode
+.vscode/
