@@ -3,12 +3,30 @@
 
 namespace mlflow {
 
-enum class RunStatus { RUNNING, FINISHED, FAILED, KILLED };
+/// Status of a `Run`.
+enum class RunStatus {
+  /// Run has been initiated.
+  RUNNING,
+
+  /// Run is scheduled to run at a later time.
+  SCHEDULED,
+
+  /// Run has completed.
+  FINISHED,
+
+  /// Run execution failed.
+  FAILED,
+
+  /// Run killed by user.
+  KILLED
+};
 
 inline std::string to_string(RunStatus status) {
   switch (status) {
   case RunStatus::RUNNING:
     return "RUNNING";
+  case RunStatus::SCHEDULED:
+    return "SCHEDULED";
   case RunStatus::FINISHED:
     return "FINISHED";
   case RunStatus::FAILED:

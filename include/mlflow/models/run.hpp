@@ -67,20 +67,33 @@ struct RunData {
   std::vector<RunTag> tags;
 };
 
-/// Run inputs
+/// Run inputs.
 struct RunInputs {
+  /// An array of `DatasetInput` (Dataset inputs to the Run).
   std::vector<DatasetInput> dataset_inputs;
+
+  /// An array of `ModelInput` (Model inputs to the Run).
   std::vector<ModelInput> model_inputs;
 };
 
+/// Outputs of a Run.
 struct RunOutputs {
+  /// An array of `ModelOutput` (Model outputs of the Run).
   std::vector<ModelOutput> model_outputs;
 };
 
+/// A single Run.
 struct Run {
+  /// Run metadata.
   RunInfo info;
+
+  /// Run data.
   std::optional<RunData> data;
+
+  /// Run inputs.
   std::optional<RunInputs> inputs;
+
+  /// Run outputs.
   std::optional<RunOutputs> outputs;
 };
 
