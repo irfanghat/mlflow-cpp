@@ -86,6 +86,6 @@ struct TraceInfoV3 {
   std::vector<TraceTag> tags;
 };
 
-// struct Trace {};
+struct Trace {};
 
 }; // namespace mlflow
