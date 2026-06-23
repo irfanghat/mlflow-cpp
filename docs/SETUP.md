@@ -28,6 +28,6 @@ cmake -DCMAKE_CXX_COMPILER=clang++ -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release
 
 # Alternatively
-CC=clang CXX=clang++ cmake ..
+CC=clang CXX=clang++ cmake .
 cmake --build .
 ```

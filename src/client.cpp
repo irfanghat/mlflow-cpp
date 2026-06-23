@@ -12,6 +12,9 @@ MlflowClient::MlflowClient(const std::string &base_url)
 
 MlflowClient::~MlflowClient() = default;
 
+// -----------------------------------------------------
+// Experiments
+// -----------------------------------------------------
 Result<std::string> Experiments::create_experiment(const std::string &name) {
   json payload = {{"name", name}};
   auto res = transport_.post("/experiments/create", payload.dump());
@@ -23,14 +26,20 @@ Result<std::string> Experiments::create_experiment(const std::string &name) {
   }
 
   auto res_json = json::parse(res.body);
+
   return {.data = res_json["experiment_id"].get<std::string>(),
           .success = true,
           .error_message = ""};
 }
 
+// -----------------------------------------------------
+// Runs
+// -----------------------------------------------------
 Result<Run> Runs::create_run(const std::string &experiment_id,
-                             int64_t start_time) {
-  json payload = {{"experiment_id", experiment_id}, {"start_time", start_time}};
+                             const TimestampMs &start_time) {
+  json payload = {{"experiment_id", experiment_id},
+                  {"start_time", start_time.value()}};
+
   auto res = transport_.post("/runs/create", payload.dump());
 
   if (res.status_code != 200) {
@@ -60,13 +69,18 @@ Result<Run> Runs::create_run(const std::string &experiment_id,
   return {.data = std::move(run), .success = true, .error_message = ""};
 }
 
+// -----------------------------------------------------
+// Metrics
+// -----------------------------------------------------
 Result<bool> Runs::log_metric(const std::string &run_id, const Metric &metric) {
   json payload = {{"run_id", run_id},
                   {"key", metric.key},
                   {"value", metric.value},
                   {"timestamp", metric.timestamp},
                   {"step", metric.step}};
+
   auto res = transport_.post("/runs/log-metric", payload.dump());
+
   bool is_ok = (res.status_code == 200);
 
   return {

@@ -21,7 +21,10 @@ fetchcontent_declare(
 )
 fetchcontent_makeavailable(json googletest)
 
-add_library(mlflow-cpp src/client.cpp)
+add_library(mlflow-cpp
+    src/client.cpp
+    src/timestamp.cpp
+)
 
 target_include_directories(mlflow-cpp
     PUBLIC

@@ -1,7 +1,17 @@
 #pragma once
+#include "models/assessment.hpp"
+#include "models/dataset.hpp"
+#include "models/experiment.hpp"
+#include "models/inference.hpp"
+#include "models/input_tag.hpp"
 #include "models/metric.hpp"
+#include "models/model_output.hpp"
+#include "models/param.hpp"
 #include "models/result.hpp"
 #include "models/run.hpp"
+#include "models/run_status.hpp"
+#include "models/timestamp.hpp"
+#include "models/trace_tag.hpp"
 #include <memory>
 #include <string>
 
@@ -21,7 +31,8 @@ private:
 class Runs {
 public:
   explicit Runs(HttpTransport &transport) : transport_(transport) {}
-  Result<Run> create_run(const std::string &experiment_id, int64_t start_time);
+  Result<Run> create_run(const std::string &experiment_id,
+                         const TimestampMs &start_time);
   Result<bool> log_metric(const std::string &run_id, const Metric &metric);
 
 private:
