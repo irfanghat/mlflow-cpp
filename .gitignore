@@ -66,9 +66,17 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+mlflow_tests
+CTestTestfile.cmake
 
 # mlflow
 mlflow_data/
 
 # VScode
 .vscode/
+
+_deps/
+_deps
+
+bin/
+bin
