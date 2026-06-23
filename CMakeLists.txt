@@ -23,6 +23,9 @@ fetchcontent_makeavailable(json googletest)
 
 add_library(mlflow-cpp
     src/client.cpp
+    src/experiments.cpp
+    src/runs.cpp
+    src/metrics.cpp
     src/timestamp.cpp
 )
 
