@@ -11,6 +11,7 @@
 #include "models/run.hpp"
 #include "models/run_status.hpp"
 #include "models/timestamp.hpp"
+#include "models/trace.hpp"
 #include "models/trace_tag.hpp"
 #include <memory>
 #include <string>

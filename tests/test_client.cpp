@@ -33,7 +33,11 @@ TEST(MlflowResultTest, DataLayout) {
   mlflow::Result<int> res{.data = 42, .success = true};
 
   EXPECT_TRUE(res);
+  ASSERT_TRUE(res.success);
   EXPECT_EQ(res.value(), 42);
+  EXPECT_EQ(res.data, 42);
+  EXPECT_EQ(res.success, true);
+  EXPECT_EQ(res.error_message, "");
 }
 
 TEST_F(MlflowClientFixture, CreateExperiment) {

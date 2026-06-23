@@ -1,5 +1,6 @@
 #pragma once
 #include "experiment.hpp"
+#include "inference.hpp"
 #include "trace_tag.hpp"
 #include <string>
 #include <variant>
@@ -23,7 +24,7 @@ inline std::string to_string(TraceStatus status) {
   return "IN_PROGRESS";
 }
 
-inline TraceStatus run_status_from_string(const std::string &status_str) {
+inline TraceStatus trace_status_from_string(const std::string &status_str) {
   if (status_str == "ERROR")
     return TraceStatus::ERROR;
   if (status_str == "TRACE_STATUS_UNSPECIFIED")
@@ -40,12 +41,6 @@ enum class TraceLocationType { MLFLOW_EXPERIMENT, INFERENCE_TABLE };
 
 struct MlflowExperimentLocation {
   std::string experiment_id;
-};
-
-struct InferenceTableLocation {
-  std::string catalog;
-  std::string schema;
-  std::string table;
 };
 
 struct TraceLocation {
@@ -91,6 +86,6 @@ struct TraceInfoV3 {
   std::vector<TraceTag> tags;
 };
 
-struct Trace {};
+// struct Trace {};
 
 }; // namespace mlflow
