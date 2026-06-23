@@ -12,7 +12,6 @@ public:
 
   value_type value() const { return value_; }
 
-  // defined in .cpp to avoid chrono header-time issues
   static TimestampMs now();
 
 private:
