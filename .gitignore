@@ -66,7 +66,7 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
-mlflow_tests
+mlflow_cpp_tests
 CTestTestfile.cmake
 
 # mlflow
