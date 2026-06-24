@@ -21,35 +21,77 @@ public:
     std::string body;
   };
 
-  Response post(const std::string &endpoint, const std::string &json_payload) {
-    CURL *curl = curl_easy_init();
+  
+  struct CurlSession
+  {
+    CURL* handle = nullptr;
+    struct curl_slist* headers = nullptr;
+  };
+
+  CurlSession setup_curl_instance(const std::string& endpoint)
+  {
+    CurlSession session;
+    session.handle = curl_easy_init();
+
+    if(session.handle)
+    {
+      std::string url = base_url_ + "/api/2.0/mlflow" + endpoint;
+      session.headers = curl_slist_append(session.headers, "Content-Type: application/json");
+
+      curl_easy_setopt(session.handle, CURLOPT_URL, url.c_str());
+      curl_easy_setopt(session.handle, CURLOPT_HTTPHEADER, session.headers);
+    }
+
+    return session;
+  }
+
+  Response exec_curl(CurlSession session)
+  {
+    if(!session.handle)
+    {
+      return {0, "Initialization failed"};
+    }
+
     std::string response_string;
     long response_code = 0;
 
-    if (curl) {
-      std::string url = base_url_ + "/api/2.0/mlflow" + endpoint;
-      struct curl_slist *headers = nullptr;
-      headers = curl_slist_append(headers, "Content-Type: application/json");
+    auto write_cb = [](char* data, size_t size, size_t nmemb, std::string* writer) -> size_t{
+      size_t total_size = size * nmemb;
+      writer->append(data, total_size);
+      return total_size;
+    };
 
-      curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-      curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-      curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_payload.c_str());
+    curl_easy_setopt(session.handle, CURLOPT_WRITEFUNCTION, +write_cb);
+    curl_easy_setopt(session.handle, CURLOPT_WRITEDATA, &response_string);
 
-      auto write_cb = [](char *data, size_t size, size_t nmemb,
-                         std::string *writer) -> size_t {
-        writer->append(data, size * nmemb);
-        return size * nmemb;
-      };
-      curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, +write_cb);
-      curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
+    curl_easy_perform(session.handle);
+    curl_easy_getinfo(session.handle, CURLINFO_RESPONSE_CODE, &response_code);
 
-      curl_easy_perform(curl);
-      curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-
-      curl_slist_free_all(headers);
-      curl_easy_cleanup(curl);
+    if(session.headers)
+    {
+      curl_slist_free_all(session.headers);
     }
+    curl_easy_cleanup(session.handle);
+
     return {response_code, response_string};
+  }
+
+  Response post(const std::string &endpoint, const std::string &json_payload) {
+    CurlSession session = setup_curl_instance(endpoint);
+
+    curl_easy_setopt(session.handle, CURLOPT_POSTFIELDS, json_payload.c_str());
+
+    return exec_curl(session);
+  }
+
+  Response get(const std::string &endpoint, const std::string& json_payload)
+  {
+    CurlSession session = setup_curl_instance(endpoint);
+    curl_easy_setopt(session.handle, CURLOPT_HTTPGET, 1L);
+    curl_easy_setopt(session.handle, CURLOPT_POSTFIELDS, nullptr);
+    curl_easy_setopt(session.handle, CURLOPT_POSTFIELDSIZE, 0L);
+
+    return exec_curl(session);
   }
 
 private:

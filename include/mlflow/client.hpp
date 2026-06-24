@@ -24,6 +24,7 @@ class Experiments {
 public:
   explicit Experiments(HttpTransport &transport) : transport_(transport) {}
   Result<std::string> create_experiment(const std::string &name);
+  Result<std::string> get_experiment_by_id(const std::string &experiment_id);
 
 private:
   HttpTransport &transport_;
