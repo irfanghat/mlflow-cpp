@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.14)
 project(mlflow-cpp VERSION 0.1.0 LANGUAGES CXX)
 
 
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+    message(FATAL_ERROR
+        "In-source builds are not supported. "
+        "Please run:\n"
+        "  cmake -S . -B build\n"
+        "  cmake --build build"
+    )
+endif()
+
+
 set(PROJECT_AUTHOR "Irfan Ghat")
 set(PROJECT_DESCRIPTION "A C++ interface to interact directly with an MLflow tracking server via its standard REST endpoints.")
 set(PROJECT_EMAIL "irfanghat@gmail.com")
