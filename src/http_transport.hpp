@@ -78,7 +78,6 @@ public:
 
   Response post(const std::string &endpoint, const std::string &json_payload) {
     CurlSession session = setup_curl_instance(endpoint);
-
     curl_easy_setopt(session.handle, CURLOPT_POSTFIELDS, json_payload.c_str());
 
     return exec_curl(session);
