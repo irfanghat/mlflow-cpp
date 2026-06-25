@@ -39,6 +39,9 @@ public:
 
   Result<bool> log_metric(const std::string &run_id, const Metric &metric);
 
+  Result<std::string> get_experiment_by_id(const std::string &experiment_id);
+  Result<std::string> get_experiment_by_name(const std::string &name);
+
 private:
   std::unique_ptr<HttpTransport> transport_;
   Experiments experiments_sub_;

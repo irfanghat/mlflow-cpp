@@ -81,5 +81,8 @@ _deps
 bin/
 bin
 
+lib
+lib/
+
 mlflow_cpp_tests[1]_include.cmake
 mlflow_cpp_tests[1]_tests.cmake

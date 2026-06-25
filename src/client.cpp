@@ -16,6 +16,16 @@ Result<std::string> MlflowClient::create_experiment(
   return experiments_sub_.create_experiment(name, artifact_location, tags);
 }
 
+Result<std::string>
+MlflowClient::get_experiment_by_id(const std::string &experiment_id) {
+  return experiments_sub_.get_experiment_by_id(experiment_id);
+}
+
+Result<std::string>
+MlflowClient::get_experiment_by_name(const std::string &name) {
+  return experiments_sub_.get_experiment_by_name(name);
+}
+
 Result<Run> MlflowClient::create_run(const std::string &experiment_id,
                                      const TimestampMs &start_time) {
   return runs_sub_.create_run(experiment_id, start_time);

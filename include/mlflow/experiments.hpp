@@ -23,6 +23,9 @@ public:
       const std::optional<std::string> &artifact_location = std::nullopt,
       const std::optional<std::vector<ExperimentTag>> &tags = std::nullopt);
 
+  Result<std::string> get_experiment_by_id(const std::string &experiment_id);
+  Result<std::string> get_experiment_by_name(const std::string &name);
+
 private:
   HttpTransport &transport_;
 };

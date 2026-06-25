@@ -22,22 +22,19 @@ public:
     std::string body;
   };
 
-  
-  struct CurlSession
-  {
-    CURL* handle = nullptr;
-    struct curl_slist* headers = nullptr;
+  struct CurlSession {
+    CURL *handle = nullptr;
+    struct curl_slist *headers = nullptr;
   };
 
-  CurlSession setup_curl_instance(const std::string& endpoint)
-  {
+  CurlSession setup_curl_instance(const std::string &endpoint) {
     CurlSession session;
     session.handle = curl_easy_init();
 
-    if(session.handle)
-    {
+    if (session.handle) {
       std::string url = base_url_ + "/api/2.0/mlflow" + endpoint;
-      session.headers = curl_slist_append(session.headers, "Content-Type: application/json");
+      session.headers =
+          curl_slist_append(session.headers, "Content-Type: application/json");
 
       curl_easy_setopt(session.handle, CURLOPT_URL, url.c_str());
       curl_easy_setopt(session.handle, CURLOPT_HTTPHEADER, session.headers);
@@ -46,17 +43,16 @@ public:
     return session;
   }
 
-  Response exec_curl(CurlSession session)
-  {
-    if(!session.handle)
-    {
+  Response exec_curl(CurlSession session) {
+    if (!session.handle) {
       return {0, "Initialization failed"};
     }
 
     std::string response_string;
     long response_code = 0;
 
-    auto write_cb = [](char* data, size_t size, size_t nmemb, std::string* writer) -> size_t{
+    auto write_cb = [](char *data, size_t size, size_t nmemb,
+                       std::string *writer) -> size_t {
       size_t total_size = size * nmemb;
       writer->append(data, total_size);
       return total_size;
@@ -68,8 +64,7 @@ public:
     curl_easy_perform(session.handle);
     curl_easy_getinfo(session.handle, CURLINFO_RESPONSE_CODE, &response_code);
 
-    if(session.headers)
-    {
+    if (session.headers) {
       curl_slist_free_all(session.headers);
     }
     curl_easy_cleanup(session.handle);
@@ -84,8 +79,7 @@ public:
     return exec_curl(session);
   }
 
-  Response get(const std::string &endpoint)
-  {
+  Response get(const std::string &endpoint) {
     CurlSession session = setup_curl_instance(endpoint);
     curl_easy_setopt(session.handle, CURLOPT_HTTPGET, 1L);
 
