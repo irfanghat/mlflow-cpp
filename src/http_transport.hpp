@@ -84,12 +84,10 @@ public:
     return exec_curl(session);
   }
 
-  Response get(const std::string &endpoint, const std::string& json_payload)
+  Response get(const std::string &endpoint)
   {
     CurlSession session = setup_curl_instance(endpoint);
     curl_easy_setopt(session.handle, CURLOPT_HTTPGET, 1L);
-    curl_easy_setopt(session.handle, CURLOPT_POSTFIELDS, nullptr);
-    curl_easy_setopt(session.handle, CURLOPT_POSTFIELDSIZE, 0L);
 
     return exec_curl(session);
   }
