@@ -47,4 +47,30 @@ Result<std::string> Experiments::get_experiment_by_id(const std::string &experim
     };
 }
 
+Result<std::string> Experiments::get_experiment_by_name(const std::string& name)
+{
+  std::string final_endpoint = std::string("/experiments/get-by-name") + "?" + "experiment_name=" + name;
+  auto res = transport_.get(final_endpoint);
+
+  if(res.status_code != 200)
+    {
+      return 
+      {
+          .data = "",
+          .success = false,
+          .error_message = "HTTP " + std::to_string(res.status_code)
+      };
+    }
+
+    auto res_json = json::parse(res.body);
+    return 
+    {
+        .data = res_json["experiment"]["experiment_id"].get<std::string>(),
+        .success = true,
+        .error_message = ""
+    };
+
+}
+
+
 } // namespace mlflow

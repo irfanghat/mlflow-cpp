@@ -75,17 +75,29 @@ TEST_F(MlflowClientFixture, CreateMultipleExperiments) {
 
 TEST_F(MlflowClientFixture, GetExperimentByID)
 {
-  std::string name = unique_name("create_experiment");
+  std::string name = unique_name("get_experiment");
 
   auto exp_res = client.experiments().create_experiment(name);
   auto exp_id = exp_res.data;
 
-  std::cout << "Experiment Id: " << exp_id << std::endl;
+  ASSERT_TRUE(exp_res.success);
+  EXPECT_FALSE(exp_res.data.empty());
 
   auto res = client.experiments().get_experiment_by_id(exp_id);
 
-  std::cout << "Response: " << res.data << std::endl;
+  ASSERT_TRUE(res.success);
+  EXPECT_FALSE(res.data.empty());
+}
 
+TEST_F(MlflowClientFixture, GetExperimentByName)
+{
+  std::string name = unique_name("get_experiment");
+  auto exp_res = client.experiments().create_experiment(name);
+
+  ASSERT_TRUE(exp_res.success);
+  EXPECT_FALSE(exp_res.data.empty());
+
+  auto res = client.experiments().get_experiment_by_name(name);
   ASSERT_TRUE(res.success);
   EXPECT_FALSE(res.data.empty());
 }
