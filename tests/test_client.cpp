@@ -1,32 +1,8 @@
-#include <gtest/gtest.h>
-#include <mlflow/client.hpp>
+#include "client_fixture.hpp"
 #include <mlflow/models/result.hpp>
-#include <mlflow/models/timestamp.hpp>
-
-#include <chrono>
-#include <string>
-
-static const std::string BASE_URL = "http://localhost:5000";
-
-class MlflowClientFixture : public ::testing::Test {
-protected:
-  mlflow::MlflowClient client{BASE_URL};
-
-  std::string unique_name(const std::string &base) {
-    auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
-                   std::chrono::system_clock::now().time_since_epoch())
-                   .count();
-
-    return base + "_" + std::to_string(now);
-  }
-
-  mlflow::TimestampMs fixed_time() {
-    return mlflow::TimestampMs(1234567890000);
-  }
-};
 
 TEST(MlflowClientTest, ClientConfiguration) {
-  EXPECT_NO_THROW({ mlflow::MlflowClient client("http://localhost:5000"); });
+  EXPECT_NO_THROW({ mlflow::MlflowClient client(BASE_URL); });
 }
 
 TEST(MlflowResultTest, DataLayout) {

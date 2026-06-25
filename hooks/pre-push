@@ -21,14 +21,14 @@ echo -e "${YELLOW}Remote:${NC} $1"
 echo ""
 
 echo -e "${BLUE}Configuring project...${NC}"
-if ! CC=clang CXX=clang++ cmake .; then
+if ! CC=clang CXX=clang++ cmake -S . -B build; then
     echo -e "${RED}CMake configuration failed${NC}"
     exit 1
 fi
 
 echo ""
 echo -e "${BLUE}Building project...${NC}"
-if ! cmake --build . -j$(nproc) --verbose; then
+if ! cmake --build build --config Debug -j$(nproc) --verbose; then
     echo ""
     echo -e "${RED}Build failed${NC}"
     echo -e "${YELLOW}Fix build errors before pushing.${NC}"
@@ -40,7 +40,7 @@ echo ""
 echo -e "${BLUE}Running tests...${NC}"
 echo ""
 
-if ! ctest --verbose --output-on-failure; then
+if ! ctest --test-dir build --verbose --output-on-failure; then
     echo ""
     echo -e "${RED}-----------------------------------------------${NC}"
     echo -e "${RED} TESTS FAILED${NC}"

@@ -28,6 +28,16 @@ cmake -DCMAKE_CXX_COMPILER=clang++ -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --config Release
 
 # Alternatively
-CC=clang CXX=clang++ cmake .
-cmake --build .
+CC=clang CXX=clang++ cmake -S . -B build
+cmake --build build
+```
+
+### Run tests
+
+```bash
+ctest --test-dir bbuild --verbose --output-on-failure
+
+# Alternatively
+cd build
+./mlflow_cpp_tests --gtest_filter=<Fixture>.<Name>
 ```

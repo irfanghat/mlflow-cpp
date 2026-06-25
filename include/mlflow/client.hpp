@@ -1,4 +1,6 @@
 #pragma once
+
+#include "experiments.hpp"
 #include "models/assessment.hpp"
 #include "models/dataset.hpp"
 #include "models/experiment.hpp"
@@ -13,6 +15,8 @@
 #include "models/timestamp.hpp"
 #include "models/trace.hpp"
 #include "models/trace_tag.hpp"
+#include "runs.hpp"
+
 #include <memory>
 #include <string>
 
@@ -20,35 +24,20 @@ namespace mlflow {
 
 class HttpTransport;
 
-class Experiments {
-public:
-  explicit Experiments(HttpTransport &transport) : transport_(transport) {}
-  Result<std::string> create_experiment(const std::string &name);
-  Result<std::string> get_experiment_by_id(const std::string &experiment_id);
-  Result<std::string> get_experiment_by_name(const std::string &name);
-
-private:
-  HttpTransport &transport_;
-};
-
-class Runs {
-public:
-  explicit Runs(HttpTransport &transport) : transport_(transport) {}
-  Result<Run> create_run(const std::string &experiment_id,
-                         const TimestampMs &start_time);
-  Result<bool> log_metric(const std::string &run_id, const Metric &metric);
-
-private:
-  HttpTransport &transport_;
-};
-
 class MlflowClient {
 public:
   explicit MlflowClient(const std::string &base_url);
   ~MlflowClient();
 
-  Experiments &experiments() { return experiments_sub_; }
-  Runs &runs() { return runs_sub_; }
+  Result<std::string> create_experiment(
+      const std::string &name,
+      const std::optional<std::string> &artifact_location = std::nullopt,
+      const std::optional<std::vector<ExperimentTag>> &tags = std::nullopt);
+
+  Result<Run> create_run(const std::string &experiment_id,
+                         const TimestampMs &start_time);
+
+  Result<bool> log_metric(const std::string &run_id, const Metric &metric);
 
 private:
   std::unique_ptr<HttpTransport> transport_;

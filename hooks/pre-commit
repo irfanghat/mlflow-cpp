@@ -14,7 +14,7 @@ echo -e "${YELLOW}--------------------------------------------${NC}"
 echo ""
 
 echo -e "${YELLOW}Configuring project...${NC}"
-CC=clang CXX=clang++ cmake . 
+CC=clang CXX=clang++ cmake -S . -B build
 
 echo ""
 echo -e "${BLUE}Running clang-format...${NC}"
@@ -34,7 +34,7 @@ echo ""
 echo -e "${BLUE}Building project...${NC}"
 echo ""
 
-cmake --build . --verbose -j$(nproc)
+cmake --build build --config Debug --verbose -j$(nproc)
 
 echo ""
 echo -e "${GREEN}All checks passed${NC}"
