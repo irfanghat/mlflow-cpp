@@ -94,3 +94,20 @@ TEST_F(MlflowCppClientFixture, DeleteExperiment)
   ASSERT_TRUE(res.success);
   ASSERT_TRUE(res.data.empty());
 }
+
+TEST_F(MlflowCppClientFixture, RestoreExperiment)
+{
+  std::string name = unique_name("restore_experiment");
+  auto exp_res = client.create_experiment(name);
+
+  ASSERT_TRUE(exp_res.success);
+  EXPECT_FALSE(exp_res.data.empty());
+
+  auto del_exp_res = client.delete_experiment(exp_res.data);
+  ASSERT_TRUE(del_exp_res.success);
+  ASSERT_TRUE(del_exp_res.data.empty());
+
+  auto res = client.restore_experiment(exp_res.data);
+  ASSERT_TRUE(res.success);
+  ASSERT_TRUE(res.data.empty());
+}

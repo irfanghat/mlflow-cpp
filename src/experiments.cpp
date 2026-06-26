@@ -102,4 +102,29 @@ Experiments::delete_experiment(const std::string& experiment_id)
   };
 }
 
+Result<std::string>
+Experiments::restore_experiment(const std::string& experiment_id)
+{
+  json payload = {{ "experiment_id", experiment_id }};
+  auto res = transport_.post("/experiments/restore", payload.dump());
+
+  if(res.status_code != 200)
+  {
+    return
+    {
+      .data = "",
+      .success = false,
+      .error_message = ""
+    };
+  }
+
+  auto res_json = json::parse(res.body);
+  return
+  {
+    .data = "",
+    .success = true,
+    .error_message = ""
+  };
+}
+
 } // namespace mlflow
