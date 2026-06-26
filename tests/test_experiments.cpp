@@ -66,7 +66,6 @@ TEST_F(MlflowCppClientFixture, GetExperimentByID) {
   EXPECT_FALSE(exp_res.data.empty());
 
   auto res = client.get_experiment_by_id(exp_id);
-
   ASSERT_TRUE(res.success);
   EXPECT_FALSE(res.data.empty());
 }
@@ -81,5 +80,17 @@ TEST_F(MlflowCppClientFixture, GetExperimentByName) {
   auto res = client.get_experiment_by_name(name);
   ASSERT_TRUE(res.success);
   EXPECT_FALSE(res.data.empty());
-  std::cout << res.value() << std::endl;
+}
+
+TEST_F(MlflowCppClientFixture, DeleteExperiment)
+{
+  std::string name = unique_name("delete_experiment");
+  auto exp_res = client.create_experiment(name);
+
+  ASSERT_TRUE(exp_res.success);
+  EXPECT_FALSE(exp_res.data.empty());
+
+  auto res = client.delete_experiment(exp_res.data);
+  ASSERT_TRUE(res.success);
+  ASSERT_TRUE(res.data.empty());
 }

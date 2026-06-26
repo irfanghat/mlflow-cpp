@@ -25,6 +25,7 @@ public:
 
   Result<std::string> get_experiment_by_id(const std::string &experiment_id);
   Result<std::string> get_experiment_by_name(const std::string &name);
+  Result<std::string> delete_experiment(const std::string& experiment_id);
 
 private:
   HttpTransport &transport_;
