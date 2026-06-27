@@ -9,49 +9,55 @@ docker-compose up -d
 
 The server will listen at `http://localhost:5000`.
 
-### Basic API Example
+## Experiments
+
+### Create Experiment
 
 ```cpp
 #include <mlflow/client.hpp>
-#include <iostream>
-#include <chrono>
 
-int main() {
+int main() 
+{
     mlflow::MlflowClient client("http://127.0.0.1:5000");
 
-    // -------------------------------
-    // Create an Experiment
-    // -------------------------------
-    auto exp_result = client.experiments().create_experiment("Inference-Pipeline");
-    
-    std::string experiment_id = exp_result.value();
+    client.create_experiment("experiment_name");
+}
+```
 
-    int64_t start_time = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()
-    ).count();
+### Create Experiment with Artifact Location & Tags
 
-    // -------------------------------
-    // Start a tracking run
-    // -------------------------------
-    auto run_result = client.runs().create_run(experiment_id, start_time);
+```cpp
+#include <mlflow/client.hpp>
+#include <mlflow/models/experiment.hpp>
 
-    std::string run_id = run_result.value().info.run_id;
+int main()
+{
+    mlflow::MlflowClient client("http://127.0.0.1:5000");
+    std::vector<mlflow::ExperimentTag> tags = { mlflow::ExperimentTag{"Test Tag Key", "Test Tag Value"} };
+    client.create_experiment("experiment_name", "/artifact_location", tags);
+}
+```
 
-    // -------------------------------
-    // Structure metric payload
-    // -------------------------------
-    mlflow::Metric accuracy_metric{
-        .key = "accuracy",
-        .value = 0.942,
-        .timestamp = start_time,
-        .step = 1
-    };
+### Get Experiment by Id
 
-    // -------------------------------
-    // Post data to the REST API
-    // -------------------------------
-    auto log_status = client.runs().log_metric(run_id, accuracy_metric);
+```cpp
+#include <mlflow/client.hpp>
 
-    return 0;
+int main()
+{
+    mlflow::MlflowClient client("http://127.0.0.1:5000");
+    auto experiment = client.get_experiment_by_id("experiment_id");
+}
+```
+
+### Get Experiment by Name
+
+```cpp
+#include <mlflow/client.hpp>
+
+int main()
+{
+    mlflow::MlflowClient client("http://127.0.0.1:5000");
+    auto experiment = client.get_experiment_by_name("experiment_name");
 }
 ```
