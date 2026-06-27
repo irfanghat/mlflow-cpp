@@ -61,3 +61,27 @@ int main()
     auto experiment = client.get_experiment_by_name("experiment_name");
 }
 ```
+
+### Delete Experiment
+
+```cpp
+#include <mlflow/client.hpp>
+
+int main()
+{
+    mlflow::MlflowClient client("http://127.0.0.1:5000");
+    client.delete_experiment("experiment_id");
+}
+```
+
+### Restore Experiment
+
+```cpp
+#include <mlflow/client.hpp>
+
+int main()
+{
+    mlflow::MlflowClient client("http://127.0.0.1:5000");
+    client.restore_experiment("experiment_id");
+}
+```
