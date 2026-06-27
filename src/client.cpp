@@ -26,6 +26,18 @@ MlflowClient::get_experiment_by_name(const std::string &name) {
   return experiments_sub_.get_experiment_by_name(name);
 }
 
+Result<std::string>
+MlflowClient::delete_experiment(const std::string& experiment_id)
+{
+  return experiments_sub_.delete_experiment(experiment_id);
+}
+
+Result<std::string>
+MlflowClient::restore_experiment(const std::string& experiment_id)
+{
+  return experiments_sub_.restore_experiment(experiment_id);
+}
+
 Result<Run> MlflowClient::create_run(const std::string &experiment_id,
                                      const TimestampMs &start_time) {
   return runs_sub_.create_run(experiment_id, start_time);
