@@ -13,8 +13,7 @@ kubectl wait \
 kubectl get nodes
 
 
-# ---------------------
-----------------------------
+# -------------------------------------------------
 # Display cluster info.
 # kubectl cluster-info --context kind-mlflow
 # -------------------------------------------------
