@@ -130,7 +130,7 @@ Experiments::restore_experiment(const std::string& experiment_id)
 Result<std::string>
 Experiments::update_experiment(const std::string& experiment_id, const std::string& new_name)
 {
-  json payload = {{ "experiment_id", experiment_id }, { "new_name": new_name }};
+  json payload = {{ "experiment_id", experiment_id }, { "new_name", new_name }};
   auto res = transport_.post("/experiments/update", payload.dump());
 
   if(res.status_code != 200)

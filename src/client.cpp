@@ -41,7 +41,7 @@ MlflowClient::restore_experiment(const std::string& experiment_id)
 Result<std::string>
 MlflowClient::update_experiment(const std::string& experiment_id, const std::string& new_name)
 {
-  return experiment_sub_.update_experiment(experiment_id, new_name);
+  return experiments_sub_.update_experiment(experiment_id, new_name);
 }
 
 Result<Run> MlflowClient::create_run(const std::string &experiment_id,

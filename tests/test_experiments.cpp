@@ -116,4 +116,13 @@ TEST_F(MlflowCppClientFixture, UpdateExperiment)
 {
   std::string name = unique_name("update_experiment");
   auto exp_res = client.create_experiment(name);
+
+  ASSERT_TRUE(exp_res.success);
+  EXPECT_FALSE(exp_res.data.empty());
+
+  std::string new_name = unique_name("new_experiment");
+  auto res = client.update_experiment(exp_res.data, new_name);
+
+  ASSERT_TRUE(res.success);
+  ASSERT_TRUE(res.data.empty());
 }
