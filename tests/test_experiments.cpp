@@ -132,47 +132,103 @@ TEST_F(MlflowCppClientFixture, GetExperimentByID) {
   EXPECT_FALSE(fetched_res.data.empty());
 }
 
-// TEST_F(MlflowCppClientFixture, GetExperimentByName) {
-//   std::string name = unique_name("get_experiment");
-//   auto exp_res = client.create_experiment(name);
+TEST_F(MlflowCppClientFixture, GetExperimentByName) {
+  std::string name = unique_name("get_experiment");
 
-//   ASSERT_TRUE(exp_res.success);
-//   EXPECT_FALSE(exp_res.data.empty());
+  bool finished_creation = false;
+  mlflow::Result<std::string> creation_res;
 
-//   auto res = client.get_experiment_by_name(name);
-//   ASSERT_TRUE(res.success);
-//   EXPECT_FALSE(res.data.empty());
-// }
+  client.create_experiment(name, [&](const auto& res){
+    creation_res = res;
+    finished_creation = true;
+  });
+  wait_for_completion([&](){ return finished_creation; });
 
-// TEST_F(MlflowCppClientFixture, DeleteExperiment)
-// {
-//   std::string name = unique_name("delete_experiment");
-//   auto exp_res = client.create_experiment(name);
+  ASSERT_TRUE(creation_res.success);
+  EXPECT_FALSE(creation_res.data.empty());
 
-//   ASSERT_TRUE(exp_res.success);
-//   EXPECT_FALSE(exp_res.data.empty());
+  bool finished_fetch = false;
+  mlflow::Result<std::string> fetched_res;
 
-//   auto res = client.delete_experiment(exp_res.data);
-//   ASSERT_TRUE(res.success);
-//   ASSERT_TRUE(res.data.empty());
-// }
+  client.get_experiment_by_name(name, [&](const auto& res){
+    fetched_res = res;
+    finished_fetch = true;
+  });
+  wait_for_completion([&](){ return finished_fetch; });
 
-// TEST_F(MlflowCppClientFixture, RestoreExperiment)
-// {
-//   std::string name = unique_name("restore_experiment");
-//   auto exp_res = client.create_experiment(name);
+  ASSERT_TRUE(fetched_res.success);
+  EXPECT_FALSE(fetched_res.data.empty());
+}
 
-//   ASSERT_TRUE(exp_res.success);
-//   EXPECT_FALSE(exp_res.data.empty());
+TEST_F(MlflowCppClientFixture, DeleteExperiment)
+{
+  std::string name = unique_name("delete_experiment");
 
-//   auto del_exp_res = client.delete_experiment(exp_res.data);
-//   ASSERT_TRUE(del_exp_res.success);
-//   ASSERT_TRUE(del_exp_res.data.empty());
+  bool finished_creation = false;
+  mlflow::Result<std::string> creation_res;
 
-//   auto res = client.restore_experiment(exp_res.data);
-//   ASSERT_TRUE(res.success);
-//   ASSERT_TRUE(res.data.empty());
-// }
+  client.create_experiment(name, [&](const auto& res){
+    creation_res = res;
+    finished_creation = true;
+  });
+  wait_for_completion([&](){ return finished_creation; });
+
+  ASSERT_TRUE(creation_res.success);
+  EXPECT_FALSE(creation_res.data.empty());
+
+  bool finished_del = false;
+  mlflow::Result<std::string> deletion_res;
+  
+  client.delete_experiment(creation_res.data, [&](const auto& res){
+    deletion_res = res;
+    finished_del = true;
+  });
+  wait_for_completion([&](){ return finished_del; });
+
+  ASSERT_TRUE(deletion_res.success);
+  ASSERT_TRUE(deletion_res.data.empty());
+}
+
+TEST_F(MlflowCppClientFixture, RestoreExperiment)
+{
+  std::string name = unique_name("restore_experiment");
+
+  bool finished_creation = false;
+  mlflow::Result<std::string> creation_res;
+
+  client.create_experiment(name, [&](const auto& res){
+    creation_res = res;
+    finished_creation = true;
+  });
+  wait_for_completion([&](){ return finished_creation; });
+
+  ASSERT_TRUE(creation_res.success);
+  EXPECT_FALSE(creation_res.data.empty());
+
+  bool finished_del = false;
+  mlflow::Result<std::string> deletion_res;
+
+  client.delete_experiment(creation_res.data, [&](const auto& res){
+    deletion_res = res;
+    finished_del = true;
+  });
+  wait_for_completion([&](){ return finished_del; });
+
+  ASSERT_TRUE(deletion_res.success);
+  ASSERT_TRUE(deletion_res.data.empty());
+
+  bool finished_restore = false;
+  mlflow::Result<std::string> restored_res;
+
+  client.restore_experiment(creation_res.data, [&](const auto& res){
+    restored_res = res;
+    finished_restore = true;
+  });
+  wait_for_completion([&](){ return finished_restore; });
+
+  ASSERT_TRUE(restored_res.success);
+  ASSERT_TRUE(restored_res.data.empty());
+}
 
 // TEST_F(MlflowCppClientFixture, UpdateExperiment)
 // {

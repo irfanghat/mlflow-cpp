@@ -35,17 +35,15 @@ void MlflowClient::get_experiment_by_name(const std::string &name, std::function
   return experiments_sub_.get_experiment_by_name(name, user_callback);
 }
 
-// Result<std::string>
-// MlflowClient::delete_experiment(const std::string& experiment_id)
-// {
-//   return experiments_sub_.delete_experiment(experiment_id);
-// }
+void MlflowClient::delete_experiment(const std::string& experiment_id, std::function<void(Result<std::string>)> user_callback)
+{
+  return experiments_sub_.delete_experiment(experiment_id, user_callback);
+}
 
-// Result<std::string>
-// MlflowClient::restore_experiment(const std::string& experiment_id)
-// {
-//   return experiments_sub_.restore_experiment(experiment_id);
-// }
+void MlflowClient::restore_experiment(const std::string& experiment_id, std::function<void(Result<std::string>)> user_callback)
+{
+  return experiments_sub_.restore_experiment(experiment_id, user_callback);
+}
 
 // Result<std::string>
 // MlflowClient::update_experiment(const std::string& experiment_id, const std::string& new_name)

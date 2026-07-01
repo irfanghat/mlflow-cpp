@@ -106,55 +106,59 @@ void Experiments::get_experiment_by_name(
   });
 }
 
-// Result<std::string>
-// Experiments::delete_experiment(const std::string& experiment_id)
-// {
-//   json payload = {{ "experiment_id", experiment_id }};
-//   auto res = transport_.post("/experiments/delete", payload.dump());
+void Experiments::delete_experiment(
+  const std::string& experiment_id, 
+  std::function<void(Result<std::string>)> user_callback)
+{
+  json payload = {{ "experiment_id", experiment_id }};
+  transport_.async_post("/experiments/delete", payload.dump(), [user_callback](long status_code, const std::string& body){
 
-//   if(res.status_code != 200)
-//   {
-//     return
-//     {
-//       .data = "",
-//       .success = false,
-//       .error_message = "HTTP " + std::to_string(res.status_code)
-//     };
-//   }
+    if(status_code != 200)
+    {
+      user_callback({
+        .data = "",
+        .success = false,
+        .error_message = "HTTP " + std::to_string(status_code)
+      });
+      return;
+    }
 
-//   auto res_json = json::parse(res.body);
-//   return
-//   {
-//     .data = "",
-//     .success = true,
-//     .error_message = ""
-//   };
-// }
+    auto res_json = json::parse(body);
+    user_callback({
+      .data = "",
+      .success = true,
+      .error_message = ""
+    });
 
-// Result<std::string>
-// Experiments::restore_experiment(const std::string& experiment_id)
-// {
-//   json payload = {{ "experiment_id", experiment_id }};
-//   auto res = transport_.post("/experiments/restore", payload.dump());
+  });
+}
 
-//   if(res.status_code != 200)
-//   {
-//     return
-//     {
-//       .data = "",
-//       .success = false,
-//       .error_message = ""
-//     };
-//   }
+void Experiments::restore_experiment(
+  const std::string& experiment_id,
+std::function<void(Result<std::string>)> user_callback)
+{
+  json payload = {{ "experiment_id", experiment_id }};
+  transport_.async_post("/experiments/restore", payload.dump(), [user_callback](long status_code, const std::string& body){
 
-//   auto res_json = json::parse(res.body);
-//   return
-//   {
-//     .data = "",
-//     .success = true,
-//     .error_message = ""
-//   };
-// }
+    if(status_code != 200)
+    {
+      user_callback({
+        .data = "",
+        .success = false,
+        .error_message = "HTTP " + std::to_string(status_code)
+      });
+      return;
+    }
+
+    auto res_json = json::parse(body);
+    user_callback({
+      .data = "",
+      .success = true,
+      .error_message = ""
+    });
+
+  });
+}
 
 // Result<std::string>
 // Experiments::update_experiment(const std::string& experiment_id, const std::string& new_name)
