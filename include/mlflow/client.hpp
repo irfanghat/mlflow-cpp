@@ -19,34 +19,40 @@
 
 #include <memory>
 #include <string>
+#include<functional>
 
 namespace mlflow {
 
-class HttpTransport;
+// class HttpTransport;
+
+class AsyncHttpTransport;
 
 class MlflowClient {
 public:
   explicit MlflowClient(const std::string &base_url);
   ~MlflowClient();
+  
+  void process_requests();
 
-  Result<std::string> create_experiment(
+  void create_experiment(
       const std::string &name,
+      std::function<void(Result<std::string>)> user_callback,
       const std::optional<std::string> &artifact_location = std::nullopt,
       const std::optional<std::vector<ExperimentTag>> &tags = std::nullopt);
 
-  Result<Run> create_run(const std::string &experiment_id,
-                         const TimestampMs &start_time);
+  // Result<Run> create_run(const std::string &experiment_id,
+  //                        const TimestampMs &start_time);
 
-  Result<bool> log_metric(const std::string &run_id, const Metric &metric);
+  // Result<bool> log_metric(const std::string &run_id, const Metric &metric);
 
-  Result<std::string> get_experiment_by_id(const std::string &experiment_id);
-  Result<std::string> get_experiment_by_name(const std::string &name);
-  Result<std::string> delete_experiment(const std::string& experiment_id);
-  Result<std::string> restore_experiment(const std::string& experiment_id);
-  Result<std::string> update_experiment(const std::string& experiment_id, const std::string& new_name);
+  void get_experiment_by_id(const std::string &experiment_id, std::function<void(Result<std::string>)> user_callback);
+  // Result<std::string> get_experiment_by_name(const std::string &name);
+  // Result<std::string> delete_experiment(const std::string& experiment_id);
+  // Result<std::string> restore_experiment(const std::string& experiment_id);
+  // Result<std::string> update_experiment(const std::string& experiment_id, const std::string& new_name);
 
 private:
-  std::unique_ptr<HttpTransport> transport_;
+  std::unique_ptr<AsyncHttpTransport> transport_;
   Experiments experiments_sub_;
   Runs runs_sub_;
 };

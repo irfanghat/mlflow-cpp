@@ -20,6 +20,24 @@ protected:
     return base + "_" + std::to_string(now);
   }
 
+  void wait_for_completion(std::function<bool()> condition)
+  {
+    auto start = std::chrono::steady_clock::now();
+    while(!condition())
+    {
+      client.process_requests();
+
+      auto now = std::chrono::steady_clock::now();
+      
+      if(std::chrono::duration_cast<std::chrono::seconds>(now - start).count() > 5)
+      {
+        FAIL() << "Test timed out waiting for create_experiment response.";
+        break;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(5));
+    }
+  }
+
   mlflow::TimestampMs fixed_time() {
     return mlflow::TimestampMs(1234567890000);
   }

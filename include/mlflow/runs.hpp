@@ -9,11 +9,11 @@
 
 namespace mlflow {
 
-class HttpTransport;
+class AsyncHttpTransport;
 
 class Runs {
 public:
-  explicit Runs(HttpTransport &transport) : transport_(transport) {}
+  explicit Runs(AsyncHttpTransport &transport) : transport_(transport) {}
 
   Result<Run> create_run(const std::string &experiment_id,
                          const TimestampMs &start_time);
@@ -21,7 +21,7 @@ public:
   Result<bool> log_metric(const std::string &run_id, const Metric &metric);
 
 private:
-  HttpTransport &transport_;
+  AsyncHttpTransport &transport_;
 };
 
 } // namespace mlflow
