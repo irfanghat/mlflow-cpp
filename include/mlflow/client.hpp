@@ -46,7 +46,7 @@ public:
   // Result<bool> log_metric(const std::string &run_id, const Metric &metric);
 
   void get_experiment_by_id(const std::string &experiment_id, std::function<void(Result<std::string>)> user_callback);
-  // Result<std::string> get_experiment_by_name(const std::string &name);
+  void get_experiment_by_name(const std::string &name, std::function<void(Result<std::string>)> user_callback);
   // Result<std::string> delete_experiment(const std::string& experiment_id);
   // Result<std::string> restore_experiment(const std::string& experiment_id);
   // Result<std::string> update_experiment(const std::string& experiment_id, const std::string& new_name);

@@ -77,23 +77,34 @@ void Experiments::get_experiment_by_id(
   });
 }
 
-// Result<std::string>
-// Experiments::get_experiment_by_name(const std::string &name) {
-//   std::string final_endpoint =
-//       std::string("/experiments/get-by-name") + "?" + "experiment_name=" + name;
-//   auto res = transport_.get(final_endpoint);
+void Experiments::get_experiment_by_name(
+  const std::string &name, 
+  std::function<void(Result<std::string>)> user_callback) {
+  std::string final_endpoint =
+      std::string("/experiments/get-by-name") + "?" + "experiment_name=" + name;
+  transport_.async_get(final_endpoint, [user_callback](long status_code, const std::string& body){
 
-//   if (res.status_code != 200) {
-//     return {.data = "",
-//             .success = false,
-//             .error_message = "HTTP " + std::to_string(res.status_code)};
-//   }
+    if(status_code != 200)
+    {
+      user_callback({
+        .data = "",
+        .success = false,
+        .error_message = "HTTP " + std::to_string(status_code)
+      });
+      return;
+    }
 
-//   auto res_json = json::parse(res.body);
-//   return {.data = res_json["experiment"]["experiment_id"].get<std::string>(),
-//           .success = true,
-//           .error_message = ""};
-// }
+    auto res_json = json::parse(body);
+    std::string exp_id = res_json["experiment"]["experiment_id"].get<std::string>();
+
+    user_callback({
+      .data = exp_id,
+      .success = true,
+      .error_message = ""
+    });
+
+  });
+}
 
 // Result<std::string>
 // Experiments::delete_experiment(const std::string& experiment_id)
