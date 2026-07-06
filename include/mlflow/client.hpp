@@ -40,16 +40,17 @@ public:
       const std::optional<std::string> &artifact_location = std::nullopt,
       const std::optional<std::vector<ExperimentTag>> &tags = std::nullopt);
 
-  // Result<Run> create_run(const std::string &experiment_id,
-  //                        const TimestampMs &start_time);
+  void create_run(const std::string &experiment_id,
+                         const TimestampMs &start_time,
+                        std::function<void(Result<Run>)> user_callback);
 
-  // Result<bool> log_metric(const std::string &run_id, const Metric &metric);
+  void log_metric(const std::string &run_id, const Metric &metric, std::function<void(Result<std::string>)> user_callback);
 
   void get_experiment_by_id(const std::string &experiment_id, std::function<void(Result<std::string>)> user_callback);
   void get_experiment_by_name(const std::string &name, std::function<void(Result<std::string>)> user_callback);
   void delete_experiment(const std::string& experiment_id, std::function<void(Result<std::string>)> user_callback);
   void restore_experiment(const std::string& experiment_id, std::function<void(Result<std::string>)> user_callback);
-  // Result<std::string> update_experiment(const std::string& experiment_id, const std::string& new_name);
+  void update_experiment(const std::string& experiment_id, const std::string& new_name, std::function<void(Result<std::string>)> user_callback);
 
 private:
   std::unique_ptr<AsyncHttpTransport> transport_;

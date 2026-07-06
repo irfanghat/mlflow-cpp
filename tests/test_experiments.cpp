@@ -230,17 +230,30 @@ TEST_F(MlflowCppClientFixture, RestoreExperiment)
   ASSERT_TRUE(restored_res.data.empty());
 }
 
-// TEST_F(MlflowCppClientFixture, UpdateExperiment)
-// {
-//   std::string name = unique_name("update_experiment");
-//   auto exp_res = client.create_experiment(name);
+TEST_F(MlflowCppClientFixture, UpdateExperiment)
+{
+  std::string name = unique_name("update_experiment");
+  bool finished_creation = false;
+  mlflow::Result<std::string> creation_res;
 
-//   ASSERT_TRUE(exp_res.success);
-//   EXPECT_FALSE(exp_res.data.empty());
+  client.create_experiment(name, [&](const auto& res){
+    creation_res = res;
+    finished_creation = true;
+  });
+  wait_for_completion([&](){ return finished_creation; });
 
-//   std::string new_name = unique_name("new_experiment");
-//   auto res = client.update_experiment(exp_res.data, new_name);
+  ASSERT_TRUE(creation_res.success);
+  EXPECT_FALSE(creation_res.data.empty());
 
-//   ASSERT_TRUE(res.success);
-//   ASSERT_TRUE(res.data.empty());
-// }
+  std::string new_name = unique_name("new_experiment");
+  bool finished_update = false;
+  mlflow::Result<std::string> update_res;
+  client.update_experiment(creation_res.data, new_name, [&](const auto& res){
+    update_res = res;
+    finished_update = true;
+  });
+  wait_for_completion([&](){ return finished_update; });
+
+  ASSERT_TRUE(update_res.success);
+  ASSERT_TRUE(update_res.data.empty());
+}

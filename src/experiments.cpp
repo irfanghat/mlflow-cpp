@@ -160,29 +160,31 @@ std::function<void(Result<std::string>)> user_callback)
   });
 }
 
-// Result<std::string>
-// Experiments::update_experiment(const std::string& experiment_id, const std::string& new_name)
-// {
-//   json payload = {{ "experiment_id", experiment_id }, { "new_name", new_name }};
-//   auto res = transport_.post("/experiments/update", payload.dump());
+void Experiments::update_experiment(const std::string& experiment_id, 
+  const std::string& new_name, 
+  std::function<void(Result<std::string>)> user_callback)
+{
+  json payload = {{ "experiment_id", experiment_id }, { "new_name", new_name }};
+  transport_.async_post("/experiments/update", payload.dump(), [user_callback](long status_code, const std::string& body){
 
-//   if(res.status_code != 200)
-//   {
-//     return
-//     {
-//       .data = "",
-//       .success = false,
-//       .error_message = ""
-//     };
-//   }
+    if(status_code != 200)
+    {
+      user_callback({
+        .data = "",
+        .success = false,
+        .error_message = "HTTP " + std::to_string(status_code)
+      });
+      return;
+    }
 
-//   auto res_json = json::parse(res.body);
-//   return
-//   {
-//     .data = "",
-//     .success = true,
-//     .error_message = ""
-//   };
-// }
+    auto res_json = json::parse(body);
+    user_callback({
+      .data = "",
+      .success = true,
+      .error_message = ""
+    });
+
+  });
+}
 
 } // namespace mlflow

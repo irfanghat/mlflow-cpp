@@ -15,10 +15,11 @@ class Runs {
 public:
   explicit Runs(AsyncHttpTransport &transport) : transport_(transport) {}
 
-  Result<Run> create_run(const std::string &experiment_id,
-                         const TimestampMs &start_time);
+  void create_run(const std::string &experiment_id,
+                         const TimestampMs &start_time,
+                        std::function<void(Result<Run>)> user_callback);
 
-  Result<bool> log_metric(const std::string &run_id, const Metric &metric);
+  void log_metric(const std::string &run_id, const Metric &metric, std::function<void(Result<std::string>)> user_callback);
 
 private:
   AsyncHttpTransport &transport_;

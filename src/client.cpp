@@ -45,20 +45,21 @@ void MlflowClient::restore_experiment(const std::string& experiment_id, std::fun
   return experiments_sub_.restore_experiment(experiment_id, user_callback);
 }
 
-// Result<std::string>
-// MlflowClient::update_experiment(const std::string& experiment_id, const std::string& new_name)
-// {
-//   return experiments_sub_.update_experiment(experiment_id, new_name);
-// }
+void MlflowClient::update_experiment(const std::string& experiment_id, const std::string& new_name, std::function<void(Result<std::string>)> user_callback)
+{
+  return experiments_sub_.update_experiment(experiment_id, new_name, user_callback);
+}
 
-// Result<Run> MlflowClient::create_run(const std::string &experiment_id,
-//                                      const TimestampMs &start_time) {
-//   return runs_sub_.create_run(experiment_id, start_time);
-// }
+void MlflowClient::create_run(const std::string &experiment_id,
+                                     const TimestampMs &start_time,
+                                    std::function<void(Result<Run>)> user_callback) {
+  return runs_sub_.create_run(experiment_id, start_time, user_callback);
+}
 
-// Result<bool> MlflowClient::log_metric(const std::string &run_id,
-//                                       const Metric &metric) {
-//   return runs_sub_.log_metric(run_id, metric);
-// }
+void MlflowClient::log_metric(const std::string &run_id,
+                                      const Metric &metric,
+                                    std::function<void(Result<std::string>)> user_callback) {
+  return runs_sub_.log_metric(run_id, metric, user_callback);
+}
 
 } // namespace mlflow

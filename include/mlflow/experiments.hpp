@@ -29,7 +29,7 @@ public:
   void get_experiment_by_name(const std::string &name, std::function<void(Result<std::string>)> user_callback);
   void delete_experiment(const std::string& experiment_id, std::function<void(Result<std::string>)> user_callback);
   void restore_experiment(const std::string& experiment_id, std::function<void(Result<std::string>)> user_callback);
-  // Result<std::string> update_experiment(const std::string& experiment_id, const std::string& new_name);
+  void update_experiment(const std::string& experiment_id, const std::string& new_name, std::function<void(Result<std::string>)> user_callback);
 
 private:
   AsyncHttpTransport &transport_;
