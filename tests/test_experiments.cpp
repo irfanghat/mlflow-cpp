@@ -20,8 +20,9 @@ TEST_F(MlflowCppClientFixture, CreateExperiment) {
   EXPECT_FALSE(create_res.data.empty());
 }
 
-TEST_F(MlflowCppClientFixture, CreateExperimentDuplicateShouldFail) {
-  std::string name = unique_name("experiment_duplicate");
+TEST_F(MlflowCppClientFixture, CreateExperimentDuplicateShouldFail)
+{
+    std::string name = unique_name("experiment_duplicate");
 
   bool finished = false;
   mlflow::Result<std::string> first_create_res;
@@ -47,9 +48,11 @@ TEST_F(MlflowCppClientFixture, CreateExperimentDuplicateShouldFail) {
   EXPECT_NE(second_create_res.error_message.find("HTTP"), std::string::npos);
 }
 
-TEST_F(MlflowCppClientFixture, CreateMultipleExperiments) {
-  for (int i = 0; i < 5; i++) {
-    auto name = unique_name("bulk_exp_" + std::to_string(i));
+TEST_F(MlflowCppClientFixture, CreateMultipleExperiments)
+{
+    for (int i = 0; i < 5; i++)
+    {
+        auto name = unique_name("bulk_exp_" + std::to_string(i));
 
     bool finished = false;
     mlflow::Result<std::string> create_res;
@@ -102,8 +105,9 @@ TEST_F(MlflowCppClientFixture, CreateExperimentWithTags) {
   EXPECT_FALSE(create_res.data.empty());
 }
 
-TEST_F(MlflowCppClientFixture, GetExperimentByID) {
-  std::string name = unique_name("get_experiment");
+TEST_F(MlflowCppClientFixture, GetExperimentByID)
+{
+    std::string name = unique_name("get_experiment");
 
   bool finished_creation = false;
   mlflow::Result<std::string> create_res;
